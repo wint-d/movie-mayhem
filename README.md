@@ -1,2 +1,4 @@
-# movie-mayhem
-This repository contains the start and end parts of the Movie Mayhem project. 
+# Movie Mayhem
+
+## Objective
+Create a movies site that allows the user to display, add, update, and delete movies. 
