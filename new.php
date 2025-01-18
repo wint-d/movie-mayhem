@@ -1,3 +1,21 @@
+<?php
+require "data.php";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	array_push($movies, [
+		'id' => end($movies)['id'] + 1,
+		'title' => $_POST['title'],
+		'director' => $_POST['director'],
+		'year' => $_POST['year'],
+		'genre' => $_POST['genre']
+	]);
+
+	$_SESSION['movies'] = $movies;
+
+	header('Location: index.php');
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,7 +48,11 @@
 				<label class="visually-hidden" for="genre">Genre</label>
 				<select class="form-select" id="genre" name="genre">
 					<option value="">Select a Genre</option>
-					<option value="Fantasy">Fantasy</option>
+					<?php foreach ($genres as $genre) : ?>
+						<option value="<?php echo $genre; ?>">
+							<?php echo $genre; ?>
+						</option>
+					<?php endforeach; ?>
 				</select>
 			</div>
 			<button type="submit" class="button">Add Movie</button>

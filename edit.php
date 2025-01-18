@@ -30,7 +30,11 @@
                 <label class="visually-hidden" for="genre">Genre</label>
                 <select class="form-select" id="genre" name="genre">
                     <option value="">Select a Genre</option>
-                    <option value="Fantasy" selected>Fantasy</option>
+                    <?php foreach ($genres as $genre) : ?>
+                        <option value="<?php echo $genre; ?>">
+                            <?php echo $genre; ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <button type="submit" class="button">Update Movie</button>
