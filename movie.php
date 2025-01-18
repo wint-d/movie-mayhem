@@ -36,7 +36,7 @@ if (isset($_GET['id'])) {
 	<main class="main">
 		<?php require "header.php"; ?>
 		<section class="movie-details">
-			<a class="movie-edit" href="edit.php">Edit</a>
+			<a class="movie-edit" href="edit.php?id=<?php echo $movie['id']; ?>">Edit</a>
 			<h2 class="movie-title">
 				<?php echo $movie['title']; ?>
 				<span class="movie-year">(<?php echo $movie['year']; ?>)</span>
