@@ -1,18 +1,9 @@
 <?php
 require "data.php";
+require "functions.php";
 
 if (isset($_GET['id'])) {
-	$movie = current(array_filter($movies, function ($movie) {
-		// Values from a query string are always strings
-		// The ID value must be converted to a number.
-		return $movie["id"] == $_GET['id'];
-		// return $movie["id"] === (int)$_GET['id'];
-	}));
-
-	// In PHP 8.4, the array_find function can be used instead.
-	// $movie = array_find($movies, function ($movie) {
-	// 	return $movie["id"] == $_GET['id'];
-	// });
+	$movie = getMovie($_GET['id']);
 
 	if (!$movie) {
 		header('Location: index.php');

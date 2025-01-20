@@ -1,10 +1,11 @@
 <?php
 require "data.php";
+require "functions.php";
 
 if (isset($_GET['search'])) {
-	$movies = array_filter($movies, function ($movie) {
-		return strpos(strtolower($movie['title']), strtolower($_GET['search'])) !== false;
-	});
+	$movies = searchMovies();
+} else {
+	$movies = getMovies();
 }
 ?>
 

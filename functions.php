@@ -39,7 +39,7 @@ function validate($movie)
           $errors[$field] = 'Year must contain only numbers';
         }
         break;
-      case 'genre_title':
+      case 'genre':
         if (empty($movie[$field])) {
           $errors[$field] = 'Genre is required';
         } else if (!in_array($movie[$field], $genres)) {
@@ -51,4 +51,83 @@ function validate($movie)
 
 
   return $errors;
+}
+
+function getMovies()
+{
+  global $movies;
+
+  return $movies;
+}
+
+function searchMovies()
+{
+  global $movies;
+
+  return array_filter($movies, function ($movie) {
+    return strpos(strtolower($movie['title']), strtolower($_GET['search'])) !== false;
+  });
+}
+
+function getMovie($id)
+{
+  global $movies;
+
+  return current(array_filter($movies, function ($movie) use ($id) {
+    return $movie["id"] == $id;
+  }));
+}
+
+function addMovie($movie)
+{
+  global $movies;
+
+  array_push($movies, [
+    'id' => end($movies)['id'] + 1,
+    'title' => $movie['title'],
+    'director' => $movie['director'],
+    'year' => $movie['year'],
+    'genre' => $movie['genre']
+  ]);
+
+  $_SESSION['movies'] = $movies;
+
+  return end($movies)['id'];
+}
+
+function updateMovie($movie)
+{
+  global $movies;
+
+  $new = [
+    'id' => $movie['id'],
+    'title' => $movie['title'],
+    'director' => $movie['director'],
+    'year' => $movie['year'],
+    'genre' => $movie['genre']
+  ];
+
+  $movies = array_map(function ($movie) use ($new) {
+    if ($movie['id'] == $new['id']) {
+      return $new;
+    }
+
+    return $movie;
+  }, $movies);
+
+  $_SESSION['movies'] = $movies;
+
+  return $movie['id'];
+}
+
+function deleteMovie($id)
+{
+  global $movies;
+  $movies = array_filter($movies, function ($movie) use ($id) {
+    return $movie['id'] != $id;
+  });
+
+  $_SESSION['movies'] = $movies;
+
+  return empty(getMovie($id));
 }
