@@ -132,6 +132,14 @@ body {
 	margin: 0 0 15px 0;
 }
 
+.movie-poster {
+	display: block;
+	width: 200px;
+	height: 300px;
+	object-fit: cover;
+	border: 1px solid #092441;
+}
+
 .form-title {
 	justify-self: center;
 	font-size: 2rem;
