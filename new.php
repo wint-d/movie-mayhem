@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<main class="main">
 		<?php require "header.php"; ?>
 		<h2 class="form-title">New Movie</h2>
-		<form class="form" method="post" novalidate>
+		<form class="form" method="post" enctype="multipart/form-data" novalidate>
 			<?php require "inputs.php"; ?>
 			<button type="submit" class="button">Add Movie</button>
 		</form>

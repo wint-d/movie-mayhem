@@ -28,6 +28,12 @@ if (isset($_GET['id'])) {
 		<?php require "header.php"; ?>
 		<section class="movie-details">
 			<a class="movie-edit" href="edit.php?id=<?php echo $movie['id']; ?>">Edit</a>
+			<?php if (file_exists('posters/' . $movie['id'] . '.jpg')) : ?>
+				<img
+					class="movie-poster"
+					src="posters/<?php echo $movie['id']; ?>.jpg"
+					alt="<?php echo $movie['title']; ?>">
+			<?php endif; ?>
 			<h2 class="movie-title">
 				<?php echo $movie['title']; ?>
 				<span class="movie-year">(<?php echo $movie['year']; ?>)</span>

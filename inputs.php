@@ -58,3 +58,13 @@
     <?php echo $errors['genre'] ?? ''; ?>
   </div>
 </div>
+
+<div class="form-group">
+  <label class="visually-hidden" for="poster">Poster</label>
+  <input
+    type="file"
+    class="form-control"
+    id="poster"
+    name="poster"
+    accept=".jpg">
+</div>
