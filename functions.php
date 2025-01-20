@@ -53,81 +53,84 @@ function validate($movie)
   return $errors;
 }
 
+function getGenreId($genre)
+{
+  global $genres;
+
+  return array_search($genre, $genres) + 1;
+}
+
 function getMovies()
 {
-  global $movies;
-
+  global $db;
+  $sql = "SELECT * FROM movies";
+  $result = $db->query($sql);
+  $movies = $result->fetchAll(PDO::FETCH_ASSOC);
   return $movies;
 }
 
 function searchMovies()
 {
-  global $movies;
-
-  return array_filter($movies, function ($movie) {
-    return strpos(strtolower($movie['title']), strtolower($_GET['search'])) !== false;
-  });
+  global $db;
+  $sql = "SELECT * FROM movies WHERE title LIKE :search";
+  $stmt = $db->prepare($sql);
+  $stmt->execute(['search' => '%' . $_GET['search'] . '%']);
+  $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  return $movies;
 }
 
 function getMovie($id)
 {
-  global $movies;
+  global $db;
 
-  return current(array_filter($movies, function ($movie) use ($id) {
-    return $movie["id"] == $id;
-  }));
+  $sql = "SELECT movies.id, title, director, year, genre FROM movies JOIN genres ON movies.genre_id = genres.id WHERE movies.id = :id";
+  $stmt = $db->prepare($sql);
+  $stmt->execute(['id' => $id]);
+  $movie = $stmt->fetch(PDO::FETCH_ASSOC);
+  return $movie;
 }
 
 function addMovie($movie)
 {
-  global $movies;
+  global $db;
+  $genre_id = getGenreId($movie['genre']);
 
-  array_push($movies, [
-    'id' => end($movies)['id'] + 1,
+  $sql = "INSERT INTO movies (title, director, year, genre_id) VALUES (:title, :director, :year, :genre_id)";
+  $stmt = $db->prepare($sql);
+  $stmt->execute([
     'title' => $movie['title'],
     'director' => $movie['director'],
     'year' => $movie['year'],
-    'genre' => $movie['genre']
+    'genre_id' => $genre_id
   ]);
 
-  $_SESSION['movies'] = $movies;
-
-  return end($movies)['id'];
+  return $db->lastInsertId();
 }
 
 function updateMovie($movie)
 {
-  global $movies;
+  global $db;
+  $genre_id = getGenreId($movie['genre']);
 
-  $new = [
-    'id' => $movie['id'],
+  $sql = "UPDATE movies SET title = :title, director = :director, year = :year, genre_id = :genre_id WHERE id = :id";
+  $stmt = $db->prepare($sql);
+  $stmt->execute([
     'title' => $movie['title'],
     'director' => $movie['director'],
     'year' => $movie['year'],
-    'genre' => $movie['genre']
-  ];
-
-  $movies = array_map(function ($movie) use ($new) {
-    if ($movie['id'] == $new['id']) {
-      return $new;
-    }
-
-    return $movie;
-  }, $movies);
-
-  $_SESSION['movies'] = $movies;
+    'genre_id' => $genre_id,
+    'id' => $movie['id']
+  ]);
 
   return $movie['id'];
 }
 
 function deleteMovie($id)
 {
-  global $movies;
-  $movies = array_filter($movies, function ($movie) use ($id) {
-    return $movie['id'] != $id;
-  });
+  global $db;
+  $sql = "DELETE FROM movies WHERE id = :id";
+  $stmt = $db->prepare($sql);
+  $stmt->execute(['id' => $id]);
 
-  $_SESSION['movies'] = $movies;
-
-  return empty(getMovie($id));
+  return $stmt->rowCount();
 }
