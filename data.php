@@ -1,14 +1,9 @@
 <?php
-require_once 'vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->safeLoad();
+$dsn = 'sqlite:movie_mayhem.sqlite';
 
-$dsn = 'mysql:host=localhost;dbname=' . $_ENV['DB_DATABASE'];
-$username = $_ENV['DB_USERNAME'];
-$password = $_ENV['DB_PASSWORD'];
 
 try {
-  $db = new PDO($dsn, $username, $password);
+  $db = new PDO($dsn);
 } catch (PDOException $e) {
   $error = $e->getMessage();
   echo $error;
